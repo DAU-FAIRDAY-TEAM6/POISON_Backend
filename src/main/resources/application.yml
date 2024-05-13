@@ -1,10 +1,20 @@
 spring:
+  #  datasource:
+  #    driver-class-name: com.mysql.cj.jdbc.Driver
+  #    url: jdbc:mysql://localhost:3306/poison?useSSL=false&serverTimezone=Asia/Seoul&characterEncoding=UTF-8
+  #    username: root
+  #    password: ${DB_PASSWORD}
   datasource:
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/poison?useSSL=false&serverTimezone=Asia/Seoul&characterEncoding=UTF-8
-    username: root
-    password: ${DB_PASSWORD}
-
+    master:
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      jdbc-url: jdbc:mysql://192.168.56.101:32774/test
+      username: root
+      password: 1234
+    slave:
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      jdbc-url: jdbc:mysql://192.168.56.101:32776/test
+      username: root
+      password: 1234
 
   jpa:
     hibernate:
