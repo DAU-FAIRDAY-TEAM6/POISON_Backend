@@ -1,4 +1,4 @@
-package poison.config;
+package poison.global.config;
 
 import com.zaxxer.hikari.HikariDataSource;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -16,8 +16,8 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 import javax.sql.DataSource;
 import java.util.HashMap;
 
-import static poison.config.ReplicationRoutingDataSource.DATASOURCE_KEY_MASTER;
-import static poison.config.ReplicationRoutingDataSource.DATASOURCE_KEY_SLAVE;
+import static poison.global.config.ReplicationRoutingDataSource.DATASOURCE_KEY_MASTER;
+import static poison.global.config.ReplicationRoutingDataSource.DATASOURCE_KEY_SLAVE;
 
 
 @Configuration

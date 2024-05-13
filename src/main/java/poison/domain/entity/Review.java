@@ -1,4 +1,4 @@
-package poison.entity;
+package poison.domain.entity;
 
 import jakarta.persistence.*;
 import lombok.Getter;

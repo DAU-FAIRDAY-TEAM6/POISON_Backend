@@ -1,14 +1,12 @@
-package poison.controller;
+package poison.domain.controller;
 
-import jakarta.persistence.EntityExistsException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
-import poison.entity.Review;
-import poison.entity.User;
-import poison.repository.ReviewRepository;
-import poison.repository.UserRepository;
+import poison.domain.entity.Review;
+import poison.domain.repository.ReviewRepository;
+import poison.domain.repository.UserRepository;
 
 import java.util.List;
 
