@@ -1,4 +1,4 @@
-package poison.domain.entity;
+package poison.domain.business.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

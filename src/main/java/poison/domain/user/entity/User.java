@@ -1,9 +1,10 @@
-package poison.domain.entity;
+package poison.domain.user.entity;
 
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import poison.domain.review.entity.Review;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,12 +1,12 @@
-package poison.domain.controller;
+package poison.domain.user.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
-import poison.domain.entity.Review;
-import poison.domain.repository.ReviewRepository;
-import poison.domain.repository.UserRepository;
+import poison.domain.review.entity.Review;
+import poison.domain.review.repository.ReviewRepository;
+import poison.domain.user.repository.UserRepository;
 
 import java.util.List;
 

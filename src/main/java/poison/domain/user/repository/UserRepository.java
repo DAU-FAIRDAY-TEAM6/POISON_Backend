@@ -1,9 +1,9 @@
-package poison.domain.repository;
+package poison.domain.user.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
-import poison.domain.entity.User;
+import poison.domain.user.entity.User;
 
 import java.util.List;
 

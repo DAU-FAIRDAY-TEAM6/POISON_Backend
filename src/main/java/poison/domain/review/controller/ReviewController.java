@@ -1,13 +1,13 @@
-package poison.domain.controller;
+package poison.domain.review.controller;
 
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
-import poison.domain.entity.User;
-import poison.domain.entity.Review;
-import poison.domain.repository.ReviewRepository;
+import poison.domain.user.entity.User;
+import poison.domain.review.entity.Review;
+import poison.domain.review.repository.ReviewRepository;
 
 @RestController
 @RequiredArgsConstructor

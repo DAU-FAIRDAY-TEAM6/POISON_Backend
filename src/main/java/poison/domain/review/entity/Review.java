@@ -1,8 +1,10 @@
-package poison.domain.entity;
+package poison.domain.review.entity;
 
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import poison.domain.business.entity.Business;
+import poison.domain.user.entity.User;
 
 @Entity
 @Getter
