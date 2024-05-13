@@ -7,14 +7,14 @@ spring:
   datasource:
     master:
       driver-class-name: com.mysql.cj.jdbc.Driver
-      jdbc-url: jdbc:mysql://192.168.56.101:32774/test
-      username: root
-      password: 1234
+      jdbc-url: jdbc:mysql://${DB_SERVER_IP}:32768/poison
+      username: ${DB_USERNAME}
+      password: ${DB_PASSWORD}
     slave:
       driver-class-name: com.mysql.cj.jdbc.Driver
-      jdbc-url: jdbc:mysql://192.168.56.101:32776/test
-      username: root
-      password: 1234
+      jdbc-url: jdbc:mysql://${DB_SERVER_IP}:32769/poison
+      username: ${DB_USERNAME}
+      password: ${DB_PASSWORD}
 
   jpa:
     hibernate:
