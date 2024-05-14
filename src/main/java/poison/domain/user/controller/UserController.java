@@ -18,9 +18,9 @@ public class UserController {
 
     @GetMapping("/api/user")
     public ResponseEntity<?> getBusiness() {
-        List<String> overTenReviewUser = userRepository.findOverTenReviewUser();
-        List<Review> reviewList = reviewRepository.findByUserList(overTenReviewUser);
+        long a = userRepository.countOverTenReviewUserWithJoin();
+//        List<Review> reviewList = reviewRepository.findByUserList(overTenReviewUser);
 
-        return ResponseEntity.ok(overTenReviewUser);
+        return ResponseEntity.ok(a);
     }
 }
