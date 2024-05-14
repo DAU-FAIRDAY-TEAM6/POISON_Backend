@@ -12,4 +12,7 @@ import java.util.List;
 public interface ReviewRepository extends JpaRepository<Review, String> {
     @Query("select count(r) from Review r where r.user.id in :userIdList and LENGTH(r.text) <= 512")
     List<Review> findByUserList(@Param("userIdList") List<String> userIdList);
+
+    @Query("select r from Review r join fetch r.user u where r.business.city = 'Philadelphia'")
+    List<Review> countPhiladelphiaReview();
 }
