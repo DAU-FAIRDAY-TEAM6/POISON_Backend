@@ -14,7 +14,4 @@ public interface UserRepository extends JpaRepository<User, String> {
 
     @Query("select count (u) from User u where (select count (r) FROM Review r WHERE r.user = u and r.business.city = 'Philadelphia') >= 10")
     Long countOverTenReviewUser();
-
-    @Query("SELECT COUNT(DISTINCT u) FROM User u JOIN u.reviewList r JOIN r.business b WHERE b.city = 'Philadelphia' GROUP BY u HAVING COUNT(r) >= 10")
-    Long countOverTenReviewUserWithJoin();
 }

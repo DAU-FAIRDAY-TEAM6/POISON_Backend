@@ -1,26 +1,21 @@
 package poison.domain.user.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
-import poison.domain.review.entity.Review;
 import poison.domain.review.repository.ReviewRepository;
 import poison.domain.user.repository.UserRepository;
+import poison.domain.user.service.UserService;
 
 import java.util.List;
 
-@RestController
+@Controller
 @RequiredArgsConstructor
 public class UserController {
-    private final UserRepository userRepository;
-    private final ReviewRepository reviewRepository;
+    private final UserService userService;
 
-    @GetMapping("/api/user")
-    public ResponseEntity<?> getBusiness() {
-        long a = userRepository.countOverTenReviewUserWithJoin();
-//        List<Review> reviewList = reviewRepository.findByUserList(overTenReviewUser);
-
-        return ResponseEntity.ok(a);
+    @GetMapping("/api/login")
+    public String login() {
+        return "user/login";
     }
 }
