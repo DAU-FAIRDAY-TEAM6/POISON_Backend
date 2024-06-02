@@ -14,7 +14,7 @@ import java.util.List;
 public class UserController {
     private final UserService userService;
 
-    @GetMapping("/api/login")
+    @GetMapping("/login")
     public String login() {
         return "user/login";
     }
