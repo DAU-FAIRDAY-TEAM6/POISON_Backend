@@ -131,9 +131,8 @@
         <div class="poison-profile">
             <img src="/image/POISON로고.png" alt="Profile Image">
             <div class="poison-profile-details">
-                <span>rla****</span><br>
-                <span>리뷰 4 팔로워 0 팔로잉 0</span><br>
-                <a href="#">나를 소개해보세요</a>
+                <span th:text="${id} + '님 반갑습니다.'">유저 닉네임</span><br>
+                <span th:text="'리뷰 ' + ${#lists.size(reviewList)} + ' 팔로워 0 팔로잉 0'">리뷰 4 팔로워 0 팔로잉 0</span><br>
             </div>
         </div>
         <div class="poison-review-header">
@@ -146,69 +145,15 @@
             </div>
         </div>
         <div class="poison-review-content">
-            <div class="poison-review-item">
-                <h3>방문자 리뷰 답글 작성/삭제 방법</h3>
-                <p>주인 권한이 있는 사업주는 방문자리뷰에 답글을 작성/수정/삭제할 수 있습니다@@@@@@@@@@@@@@@@@@@@.</p>
-                <div class="footer">
-                    <span>네이버고객센터</span>
+            <th:block th:each="review, iterStat : ${reviewList}">
+                <div th:classappend="${iterStat.index >= 6} ? 'hidden'" class="poison-review-item">
+                    <h3 th:text="${review.reviewId}">리뷰 제목</h3>
+                    <p th:text="${review.text}">리뷰 내용</p>
+                    <div class="footer">
+                        <span th:text="${review.stars + ' stars'}">별점</span>
+                    </div>
                 </div>
-            </div>
-            <div class="poison-review-item">
-                <h3>영수증이 타업체로 인식되는 경우</h3>
-                <p>영수증과 플레이스 정보가 불일치한 경우 정확한 인식이 어려울 수 있습니다.</p>
-                <div class="footer">
-                    <span>네이버고객센터</span>
-                </div>
-            </div>
-            <div class="poison-review-item">
-                <h3>내 업체의 결제 리뷰가 아닌 경우</h3>
-                <p>고객 결제 정보 보기로 업체 영수증 및 카드 내역이 맞는지 확인할 수 있습니다.</p>
-                <div class="footer">
-                    <span>네이버고객센터</span>
-                </div>
-            </div>
-            <div class="poison-review-item hidden">
-                <h3>MY플레이스 사업주 보호 정책 안내</h3>
-                <p>MY플레이스는 사업주의 권리 보호를 위해 모니터링 및 제재 조치하고 있습니다.</p>
-                <div class="footer">
-                    <span>네이버고객센터</span>
-                </div>
-            </div>
-            <div class="poison-review-item hidden">
-                <h3>MY플레이스 사업주 보호 정책 안내</h3>
-                <p>MY플레이스는 사업주의 권리 보호를 위해 모니터링 및 제재 조치하고 있습니다.</p>
-                <div class="footer">
-                    <span>네이버고객센터</span>
-                </div>
-            </div>
-            <div class="poison-review-item hidden">
-                <h3>MY플레이스 사업주 보호 정책 안내</h3>
-                <p>MY플레이스는 사업주의 권리 보호를 위해 모니터링 및 제재 조치하고 있습니다.</p>
-                <div class="footer">
-                    <span>네이버고객센터</span>
-                </div>
-            </div>
-            <div class="poison-review-item hidden">
-                <h3>MY플레이스 사업주 보호 정책 안내</h3>
-                <p>MY플레이스는 사업주의 권리 보호를 위해 모니터링 및 제재 조치하고 있습니다.</p>
-                <div class="footer">
-                    <span>네이버고객센터</span>
-                </div>
-            </div>
-            <div class="poison-review-item hidden">
-                <h3>MY플레이스 사업주 보호 정책 안내</h3>
-                <p>MY플레이스는 사업주의 권리 보호를 위해 모니터링 및 제재 조치하고 있습니다.</p>
-                <div class="footer">
-                    <span>네이버고객센터</span>
-                </div>
-            </div>
-            <div class="poison-review-item hidden">
-                <h3>MY플레이스 사업주 보호 정책 안내</h3>
-                <p>MY플레이스는 사업주의 권리 보호를 위해 모니터링 및 제재 조치하고 있습니다.</p>
-                <div class="footer">
-                    <span>네이버고객센터</span>
-                </div>
-            </div>
+            </th:block>
         </div>
         <div class="poison-review-footer">
             <button>리뷰 쓰기</button>

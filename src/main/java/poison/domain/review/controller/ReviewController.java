@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import poison.domain.review.dto.ReviewResponse;
 import poison.domain.review.service.ReviewService;
+import poison.global.security.PrincipalDetails;
 
 import java.util.List;
 
@@ -24,12 +25,12 @@ public class ReviewController {
         return "review/review";
     }
 
-    @ResponseBody
     @GetMapping("/review")
-    public List<ReviewResponse> getUserReview(@AuthenticationPrincipal User user, Model model) {
-        List<ReviewResponse> reviewResponseList = reviewService.getUserReview(user.getUsername());
-
-        return reviewResponseList;
+    public String getUserReview(@AuthenticationPrincipal PrincipalDetails principalDetails, Model model) {
+        List<ReviewResponse> reviewResponseList = reviewService.getUserReview(principalDetails.getUser().getId());
+        model.addAttribute("reviewList", reviewResponseList);
+        model.addAttribute("id", principalDetails.getUser().getId());
+        return "review/review";
     }
 
 }
