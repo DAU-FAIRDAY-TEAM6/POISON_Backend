@@ -20,11 +20,11 @@ public class Business {
     private String name;
     private String address;
     private String city;
-    private String latitude;
-    private String longitude;
+    private Double latitude;
+    private Double longitude;
 
     @Builder
-    public Business(String name, String address, String city, String latitude, String longitude) {
+    public Business(String name, String address, String city, Double latitude, Double longitude) {
         this.name = name;
         this.address = address;
         this.city = city;

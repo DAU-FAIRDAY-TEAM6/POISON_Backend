@@ -11,8 +11,8 @@ public class BusinessResponse {
     private String name;
     private String address;
     private String city;
-    private String latitude;
-    private String longitude;
+    private Double latitude;
+    private Double longitude;
 
     public static BusinessResponse from(Business business) {
         return BusinessResponse.builder()
