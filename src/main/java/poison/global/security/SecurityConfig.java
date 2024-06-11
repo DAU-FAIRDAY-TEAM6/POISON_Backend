@@ -28,6 +28,11 @@ public class SecurityConfig {
     private final UserDetailServiceCustom userDetailServiceCustom;
 
     @Bean
+    public AuthenticationProviderCustom customAuthenticationProvider() {
+        return new AuthenticationProviderCustom(userDetailServiceCustom);
+    }
+
+    @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
         http
@@ -52,10 +57,10 @@ public class SecurityConfig {
                                 .usernameParameter("username")
                                 .passwordParameter("password")
                                 .loginProcessingUrl("/login-proc")
-                                .defaultSuccessUrl("/", true)
+                                .defaultSuccessUrl("/page/main", true)
                 )
                 .logout((logoutConfig) ->
-                        logoutConfig.logoutSuccessUrl("/")
+                        logoutConfig.logoutSuccessUrl("/login")
                 )
                 .userDetailsService(userDetailServiceCustom);
 
