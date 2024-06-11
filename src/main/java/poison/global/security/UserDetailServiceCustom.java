@@ -23,10 +23,13 @@ public class UserDetailServiceCustom implements UserDetailsService {
         User user = userRepository.findById(username)
                 .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
 
-        return org.springframework.security.core.userdetails.User.builder()
-                .username(user.getId())
-                .password(passwordEncoder.encode(user.getId()))
-                .authorities(Role.ROLE_USER.name())
+        UserDto userDto = UserDto.builder()
+                .id(user.getId())
+                .role(Role.ROLE_USER)
+                .build();
+
+        return PrincipalDetails.builder()
+                .user(userDto)
                 .build();
     }
 }

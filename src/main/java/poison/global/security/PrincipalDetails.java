@@ -1,10 +1,7 @@
 package poison.global.security;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -13,18 +10,17 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 
-@NoArgsConstructor
-@AllArgsConstructor
+@Builder
 @Getter
 @ToString
 public class PrincipalDetails implements UserDetails {
-    private MemberDto member;
+    private UserDto user;
 
     @JsonIgnore
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         Collection<GrantedAuthority> authorities = new ArrayList<>();
-        return Collections.singletonList(new SimpleGrantedAuthority(member.getRole().name()));
+        return Collections.singletonList(new SimpleGrantedAuthority(user.getRole().name()));
     }
 
     @JsonIgnore
