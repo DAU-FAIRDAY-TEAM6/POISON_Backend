@@ -1,0 +1,145 @@
+<!--<!DOCTYPE html>-->
+<!--<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"-->
+<!--      layout:decorate="~{layout/layout}">-->
+<!--<head>-->
+<!--  <meta charset="UTF-8" />-->
+<!--  <meta name="viewport" content="width=device-width, initial-scale=1.0" />-->
+<!--  <title>Main Page</title>-->
+<!--  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"/>-->
+<!--  <style>-->
+<!--    #container {-->
+<!--      display: flex;-->
+<!--    }-->
+
+<!--    #search-list {-->
+<!--      width: 30%;-->
+<!--      padding: 10px;-->
+<!--      box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);-->
+<!--      overflow-y: auto;-->
+<!--    }-->
+
+<!--    #map {-->
+<!--      width: 70%;-->
+<!--      height: 600px;-->
+<!--    }-->
+
+<!--    .place-item {-->
+<!--      margin-bottom: 10px;-->
+<!--    }-->
+
+<!--    .place-item h3 {-->
+<!--      margin: 0;-->
+<!--      font-size: 16px;-->
+<!--    }-->
+
+<!--    .place-item p {-->
+<!--      margin: 0;-->
+<!--      color: #777;-->
+<!--    }-->
+<!--  </style>-->
+<!--  <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=ab9e6700f2bc6a1dee2720143aade0cf&libraries=services"></script>-->
+<!--</head>-->
+<!--<body>-->
+<!--<th:block layout:fragment="content">-->
+<!--  <div id="container">-->
+<!--    <div id="search-list">-->
+<!--      <h2>전국맛집지도</h2>-->
+<!--      <input type="text" id="search-input" placeholder="검색어를 입력하세요">-->
+<!--      <button onclick="searchPlaces()">검색</button>-->
+<!--      <div id="placesList"></div>-->
+<!--    </div>-->
+<!--    <div id="map"></div>-->
+<!--  </div>-->
+
+<!--  <script>-->
+<!--    var mapContainer = document.getElementById('map'), // 지도를 표시할 div-->
+<!--            mapOption = {-->
+<!--              center: new kakao.maps.LatLng(37.566535, 126.9779692), // 지도의 중심좌표-->
+<!--              level: 3 // 지도의 확대 레벨-->
+<!--            };-->
+
+<!--    var map = new kakao.maps.Map(mapContainer, mapOption); // 지도를 생성합니다-->
+
+<!--    var ps = new kakao.maps.services.Places(); // 장소 검색 객체를 생성합니다-->
+<!--    var infowindow = new kakao.maps.InfoWindow({zIndex:1}); // 인포윈도우를 생성합니다-->
+
+<!--    function searchPlaces() {-->
+<!--      var keyword = document.getElementById('search-input').value;-->
+
+<!--      if (!keyword.replace(/^\s+|\s+$/g, '')) {-->
+<!--        alert('키워드를 입력해주세요!');-->
+<!--        return false;-->
+<!--      }-->
+
+<!--      ps.keywordSearch(keyword, placesSearchCB);-->
+<!--    }-->
+
+<!--    function placesSearchCB(data, status, pagination) {-->
+<!--      if (status === kakao.maps.services.Status.OK) {-->
+<!--        displayPlaces(data);-->
+<!--      } else if (status === kakao.maps.services.Status.ZERO_RESULT) {-->
+<!--        alert('검색 결과가 존재하지 않습니다.');-->
+<!--      } else if (status === kakao.maps.services.Status.ERROR) {-->
+<!--        alert('검색 중 오류가 발생했습니다.');-->
+<!--      }-->
+<!--    }-->
+
+<!--    function displayPlaces(places) {-->
+<!--      var listEl = document.getElementById('placesList'),-->
+<!--              bounds = new kakao.maps.LatLngBounds();-->
+
+<!--      listEl.innerHTML = '';-->
+
+<!--      for (var i = 0; i < places.length; i++) {-->
+<!--        var placePosition = new kakao.maps.LatLng(places[i].y, places[i].x),-->
+<!--                marker = addMarker(placePosition, i),-->
+<!--                itemEl = getListItem(i, places[i]);-->
+
+<!--        bounds.extend(placePosition);-->
+
+<!--        (function (marker, title) {-->
+<!--          kakao.maps.event.addListener(marker, 'mouseover', function () {-->
+<!--            displayInfowindow(marker, title);-->
+<!--          });-->
+
+<!--          kakao.maps.event.addListener(marker, 'mouseout', function () {-->
+<!--            infowindow.close();-->
+<!--          });-->
+
+<!--          itemEl.onclick = function () {-->
+<!--            map.setCenter(marker.getPosition());-->
+<!--          };-->
+<!--        })(marker, places[i].place_name);-->
+
+<!--        listEl.appendChild(itemEl);-->
+<!--      }-->
+
+<!--      map.setBounds(bounds);-->
+<!--    }-->
+
+<!--    function addMarker(position, idx) {-->
+<!--      var marker = new kakao.maps.Marker({-->
+<!--        position: position-->
+<!--      });-->
+
+<!--      marker.setMap(map);-->
+<!--      return marker;-->
+<!--    }-->
+
+<!--    function getListItem(index, place) {-->
+<!--      var el = document.createElement('div');-->
+<!--      el.className = 'place-item';-->
+<!--      el.innerHTML = '<h3>' + place.place_name + '</h3><p>' + place.road_address_name + '</p>';-->
+<!--      return el;-->
+<!--    }-->
+
+<!--    function displayInfowindow(marker, title) {-->
+<!--      var content = '<div style="padding:5px;z-index:1;">' + title + '</div>';-->
+
+<!--      infowindow.setContent(content);-->
+<!--      infowindow.open(map, marker);-->
+<!--    }-->
+<!--  </script>-->
+<!--</th:block>-->
+<!--</body>-->
+<!--</html>-->

@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/layout}">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Main Page</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"/>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+        }
+
+        #container {
+            display: flex;
+        }
+
+        #search-list {
+            width: 30%;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            overflow-y: auto;
+            background-color: #f9f9f9;
+        }
+
+        #search-list h2 {
+            margin-top: 0;
+            font-size: 24px;
+            color: #333;
+        }
+
+        .search-bar-semi {
+            display: flex;
+            align-items: center;
+            margin: 20px 0;
+            position: relative;
+        }
+
+        .search-bar-semi input[type="text"] {
+            width: calc(100% - 50px);
+            padding: 10px 40px 10px 10px;
+            border: none;
+            border-radius: 25px;
+            font-size: 16px;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .search-bar-semibar button {
+            position: absolute;
+            right: 10px;
+            background: none;
+            border: none;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        .search-bar-semi button i {
+            font-size: 18px;
+            color: #aaa;
+        }
+
+        #placesList {
+            margin-top: 20px;
+        }
+
+        .place-item {
+            margin-bottom: 15px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            background-color: #fff;
+        }
+
+        .place-item h3 {
+            margin: 0;
+            font-size: 18px;
+            color: #333;
+        }
+
+        .place-item p {
+            margin: 0;
+            color: #777;
+            font-size: 14px;
+        }
+
+        #map {
+            width: 70%;
+            height: 600px;
+        }
+    </style>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAyFY2_kFz8746_-WAiMLm68Sg7NXMvITs&libraries=places"></script>
+    <script src="https://unpkg.com/@googlemaps/markerclusterer"></script>
+</head>
+<body>
+<th:block layout:fragment="content">
+    <div id="container">
+        <div id="search-list">
+            <h2>전국맛집지도</h2>
+            <div class="search-bar-semi">
+                <input type="text" id="search-input" placeholder="검색어를 입력하세요">
+                <button onclick="searchPlaces()">
+                    <i class="fa fa-search"></i>
+                </button>
+            </div>
+            <div id="placesList"></div>
+        </div>
+        <div id="map"></div>
+    </div>
+
+    <script>
+        var map;
+        var infowindow;
+        var markers = [];
+        var markerCluster = null;
+
+        function initMap() {
+            map = new google.maps.Map(document.getElementById('map'), {
+                center: {lat: 37.566535, lng: 126.9779692},
+                zoom: 13
+            });
+
+            infowindow = new google.maps.InfoWindow();
+
+            // 지도 경계 변경 이벤트 리스너 추가
+            google.maps.event.addListener(map, 'bounds_changed', function() {
+                var zoomLevel = map.getZoom();
+                console.log("zoomLevel: " + zoomLevel);
+                if (zoomLevel <= 15) {
+                    getClusterData();
+                } else {
+                    clearMarkers();
+                    var bounds = map.getBounds();
+                    var ne = bounds.getNorthEast();
+                    var sw = bounds.getSouthWest();
+
+                    var boundsData = {
+                        northEast: {
+                            lat: ne.lat(),
+                            lng: ne.lng()
+                        },
+                        southWest: {
+                            lat: sw.lat(),
+                            lng: sw.lng()
+                        }
+                    };
+
+                    sendBoundsToServer(boundsData);
+                }
+            });
+        }
+
+        function searchPlaces() {
+            var keyword = document.getElementById('search-input').value;
+
+            if (!keyword.replace(/^\s+|\s+$/g, '')) {
+                alert('키워드를 입력해주세요!');
+                return false;
+            }
+
+            var service = new google.maps.places.PlacesService(map);
+            service.findPlaceFromQuery({
+                query: keyword,
+                fields: ['name', 'geometry', 'formatted_address']
+            }, function(results, status) {
+                console.log(status);
+                if (status === google.maps.places.PlacesServiceStatus.OK) {
+                    displayPlaces(results);
+                } else {
+                    alert('검색 결과가 존재하지 않습니다.');
+                }
+            });
+        }
+
+        function displayPlaces(places) {
+            var listEl = document.getElementById('placesList');
+            listEl.innerHTML = '';
+
+            clearMarkers();
+
+            var bounds = new google.maps.LatLngBounds();
+
+            for (var i = 0; i < places.length; i++) {
+                var place = places[i];
+                var placePosition = place.geometry.location;
+                var marker = new google.maps.Marker({
+                    map: map,
+                    position: placePosition
+                });
+
+                markers.push(marker);
+
+                var itemEl = getListItem(i, place);
+                bounds.extend(placePosition);
+
+                (function(marker, title) {
+                    google.maps.event.addListener(marker, 'mouseover', function() {
+                        displayInfowindow(marker, title);
+                    });
+
+                    google.maps.event.addListener(marker, 'mouseout', function() {
+                        infowindow.close();
+                    });
+
+                    itemEl.onclick = function() {
+                        map.setCenter(marker.getPosition());
+                    };
+                })(marker, place.name);
+
+                listEl.appendChild(itemEl);
+            }
+
+            map.fitBounds(bounds);
+        }
+
+        function getListItem(index, place) {
+            var el = document.createElement('div');
+            el.className = 'place-item';
+            el.innerHTML = '<h3>' + place.name + '</h3><p>' + place.formatted_address + '</p>';
+            return el;
+        }
+
+        function displayInfowindow(marker, title) {
+            var content = '<div style="padding:5px;z-index:1;">' + title + '</div>';
+            infowindow.setContent(content);
+            infowindow.open(map, marker);
+        }
+
+        function clearMarkers() {
+            for (var i = 0; i < markers.length; i++) {
+                markers[i].setMap(null);
+            }
+            markers = [];
+            if (markerCluster) {
+                markerCluster.clearMarkers();
+            }
+        }
+
+        function sendBoundsToServer(boundsData) {
+            var url = '/api/business/map?' +
+                'neLat=' + boundsData.northEast.lat +
+                '&neLng=' + boundsData.northEast.lng +
+                '&swLat=' + boundsData.southWest.lat +
+                '&swLng=' + boundsData.southWest.lng;
+
+            $.ajax({
+                url: url,  // 서버의 URL에 맞게 변경
+                type: 'GET',
+                success: function(response) {
+                    console.log('요청 성공');
+                    displayBusinesses(response);
+                },
+                error: function(xhr, status, error) {
+                    console.error('요청 실패', error);
+                }
+            });
+        }
+
+        function displayBusinesses(businesses) {
+            clearMarkers();
+            console.log(businesses);
+
+            businesses.forEach(function(business) {
+                var position = {lat: business.latitude, lng: business.longitude};
+                var marker = new google.maps.Marker({
+                    map: map,
+                    position: position
+                });
+
+                markers.push(marker);
+
+                google.maps.event.addListener(marker, 'mouseover', function() {
+                    displayInfowindow(marker, business.name);
+                });
+
+                google.maps.event.addListener(marker, 'mouseout', function() {
+                    infowindow.close();
+                });
+            });
+
+            if (markers.length >= 50 && map.getZoom() <= 18) { // 마커가 50개 이상이고 줌 레벨이 18 이하이면 클러스터링
+                markerCluster = new markerClusterer.MarkerClusterer({ map, markers, minimumClusterSize: 50 });
+            } else if (map.getZoom() > 18) {
+                // 줌 레벨이 18 이상일 때 클러스터링을 해제하고 개별 마커로 표시
+                if (markerCluster) {
+                    markerCluster.clearMarkers();
+                }
+                markers.forEach(function(marker) {
+                    marker.setMap(map);
+                });
+            }
+        }
+
+        function getClusterData() {
+            var bounds = map.getBounds();
+            var ne = bounds.getNorthEast();
+            var sw = bounds.getSouthWest();
+
+            var boundsData = {
+                northEast: {
+                    lat: ne.lat(),
+                    lng: ne.lng()
+                },
+                southWest: {
+                    lat: sw.lat(),
+                    lng: sw.lng()
+                }
+            };
+
+            var url = '/api/business/map?' +
+                'neLat=' + boundsData.northEast.lat +
+                '&neLng=' + boundsData.northEast.lng +
+                '&swLat=' + boundsData.southWest.lat +
+                '&swLng=' + boundsData.southWest.lng;
+
+            $.ajax({
+                url: url,
+                type: 'GET',
+                success: function(response) {
+                    console.log('클러스터 데이터 요청 성공');
+                    displayCluster(response);
+                },
+                error: function(xhr, status, error) {
+                    console.error('클러스터 데이터 요청 실패', error);
+                }
+            });
+        }
+
+        function displayCluster(businesses) {
+            clearMarkers();
+            console.log(businesses);
+
+            var positions = [];
+            businesses.forEach(function(business) {
+                var position = {lat: business.latitude, lng: business.longitude};
+                positions.push(position);
+            });
+
+            markers = positions.map(function(location) {
+                return new google.maps.Marker({
+                    position: location
+                });
+            });
+
+            if (markers.length >= 50) { // 마커가 50개 이상이면 클러스터링
+                markerCluster = new markerClusterer.MarkerClusterer({ map, markers, minimumClusterSize: 50 });
+            } else {
+                markers.forEach(function(marker) {
+                    marker.setMap(map);
+                });
+            }
+        }
+
+        // 지도 초기화
+        window.onload = initMap;
+    </script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+</th:block>
+</body>
+</html>
