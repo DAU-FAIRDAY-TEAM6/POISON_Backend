@@ -132,7 +132,7 @@
             <img src="/image/POISON로고.png" alt="Profile Image">
             <div class="poison-profile-details">
                 <span th:text="${id} + '님 반갑습니다.'">유저 닉네임</span><br>
-                <span th:text="'리뷰 ' + ${#lists.size(reviewList)} + ' 팔로워 0 팔로잉 0'">리뷰 4 팔로워 0 팔로잉 0</span><br>
+                <span th:text="'리뷰 ' + ${reviewList.size()} + ' 팔로워 0 팔로잉 0'">리뷰 4 팔로워 0 팔로잉 0</span><br>
             </div>
         </div>
         <div class="poison-review-header">
